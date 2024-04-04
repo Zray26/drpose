@@ -1,1 +1,496 @@
-test
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>You Only Scan Once: A Dynamic Scene Reconstruction Pipeline for 6-DoF Robotic Grasping of Novel Objects</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
+  <!-- <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <!-- <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div> -->
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">You Only Scan Once: A Dynamic Scene Reconstruction Pipeline for 6-DoF Robotic Grasping of Novel Objects</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://zray26.github.io">Lei Zhou</a><sup>1</sup>,</span>
+            <span class="author-block">
+              Haozhe Wang<sup>1</sup>,</span>
+            <span class="author-block">
+              Zhengshen Zhang<sup>1</sup>,
+            </span>
+            <span class="author-block">
+              Zhiyang Liu<sup>1</sup>,
+            </span>
+            <span class="author-block">
+              Francis EH Tay<sup>1</sup>,
+            </span>
+            <span class="author-block">
+              Marcelo H. Ang Jr.<sup>1</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>National University of Singapore</span>
+          </div>
+
+          <!-- <div class="column has-text-centered">
+            <div class="publication-links"> -->
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span> -->
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span> -->
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+          </div> -->
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We present the first method capable of photorealistically reconstructing a non-rigidly
+            deforming scene using photos/videos captured casually from mobile phones.
+          </p>
+          <p>
+            Our approach augments neural radiance fields
+            (NeRF) by optimizing an
+            additional continuous volumetric deformation field that warps each observed point into a
+            canonical 5D NeRF.
+            We observe that these NeRF-like deformation fields are prone to local minima, and
+            propose a coarse-to-fine optimization method for coordinate-based models that allows for
+            more robust optimization.
+            By adapting principles from geometry processing and physical simulation to NeRF-like
+            models, we propose an elastic regularization of the deformation field that further
+            improves robustness.
+          </p>
+          <p>
+            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
+            photos/videos into deformable NeRF
+            models that allow for photorealistic renderings of the subject from arbitrary
+            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
+            using a
+            rig with two mobile phones that take time-synchronized photos, yielding train/validation
+            images of the same pose at different viewpoints. We show that our method faithfully
+            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
+            fidelity.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <!-- <iframe src="https://youtu.be/9w-tQ6pxft0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+          <iframe width="420" height="315" allow="autoplay ; encrypted-media" src="https://www.youtube.com/embed/9w-tQ6pxft0" ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<section class="pipeline">
+  <div class="container is-max-desktop">
+    <div class="hero-body is-centered has-text-centered">
+      <h2 class="title is-3">Pipeline</h2>
+      <!-- <img id="teaser" width=100%> -->
+      <img src="./static/images/pipline_icra_2024_final.png"  width=100%>
+      <!-- </img> -->
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">YOSO</span> turns selfie videos from your phone into
+        free-viewpoint
+        portraits.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="scan">
+  <div class="container is-max-desktop">
+    <div class="hero-body is-centered has-text-centered">
+      <h2 class="title is-4">Scan</h2>
+      <video id="teaser" controls autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/Franka_scene_scan_compress.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        A wrist camera is used to scan the workspace and capture RGBD images.
+
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<!-- <style>
+  div.full-width {position:relative;width:100%;left: 0px;top:100px;float:center;}
+  @media screen
+  and (min-width: 1051px), screen and (min-device-width:851) {
+  div.video {position:static;float:left;padding:5px;width:30%;}
+  iframe {width:100%;}
+  }
+  }
+  </style>
+  <div class="full-width">
+  <div class="video"><iframe width="560" height="315" src="./static/videos/blueshirt.mp4" title="" frameborder="0" allow="controls" allowfullscreen=""></iframe></div>
+  <div class="video"><iframe width="560" height="315" src="https://www.youtube.com/embed/-EfriB4sNgk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+  <div class="video"><iframe width="560" height="315" src="https://www.youtube.com/embed/ES4b2a7p3kM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+  </div> -->
+ 
+
+
+
+<!-- <div class="videos1">
+  <div class="video1">
+      <iframe width="560" height="315" src="./static/videos/mask.mp4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <br>
+    <div class="caption" style="color:#ffffff">
+      Coming Soon!
+      </div>
+  </div>
+  <div class="video1">
+      <iframe width="560" height="315" src="./static/videos/toby.mp4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>     <br>
+    <div class="caption" style="color:#ffffff">
+      Coming Soon!
+    </div>
+  </div>
+  <div class="video1">
+      <iframe width="560" height="315" src="./static/videos/toby2.mp4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <br>
+    <div class="caption" style="color:#ffffff">
+      Coming Soon!
+    </div>
+  </div>
+</div>  -->
+<div class="container is-max-desktop has-text-centered">
+
+  <h2 class="title is-4" >Stage I</h2>
+  
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); grid-gap: 20px;">
+
+
+  <!-- Video 1 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">RGB</h3>
+    <div style="position: relative; width: 100%; padding-left: 0;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/rgb_stage1.mp4">
+      </video>
+      <!-- <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="./static/videos/blueshirt.mp4" title="Pine Siskin" frameborder="0" allow="autoplay; encrypted-media" autoplay allowfullscreen></iframe> -->
+    </div>
+  </div>
+
+  <!-- Video 2 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Depth</h3>
+    <div style="position: relative; width: 100%; padding-left: 0%;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/depth_stage1.mp4">
+      </video>
+    </div>
+    
+  </div>
+
+
+  <!-- Video 3 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Masks</h3>
+    <div style="position: relative; width: 100%; padding-left: 0;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/mask_stage1.mp4">
+      </video>
+      <!-- <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="./static/videos/blueshirt.mp4" title="Pine Siskin" frameborder="0" allow="autoplay; encrypted-media" autoplay allowfullscreen></iframe> -->
+    </div>
+  </div>
+
+  <!-- Video 4 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Poses</h3>
+    <div style="position: relative; width: 100%; padding-left: 0%;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/pose_stage1.mp4">
+      </video>
+    </div>
+    
+  </div>
+</div>
+
+
+<br>
+<br>
+<br>
+
+<div class="container is-max-desktop has-text-centered">
+
+  <h2 class="title is-4" >Stage II</h2>
+  
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); grid-gap: 20px;">
+
+
+  <!-- Video 1 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">RGB</h3>
+    <div style="position: relative; width: 100%; padding-left: 0;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/rgb_stage2.mp4">
+      </video>
+      <!-- <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="./static/videos/blueshirt.mp4" title="Pine Siskin" frameborder="0" allow="autoplay; encrypted-media" autoplay allowfullscreen></iframe> -->
+    </div>
+  </div>
+
+  <!-- Video 2 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Depth</h3>
+    <div style="position: relative; width: 100%; padding-left: 0%;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/depth_stage2.mp4">
+      </video>
+    </div>
+    
+  </div>
+
+
+  <!-- Video 3 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Masks</h3>
+    <div style="position: relative; width: 100%; padding-left: 0;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/mask_stage2.mp4">
+      </video>
+      <!-- <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="./static/videos/blueshirt.mp4" title="Pine Siskin" frameborder="0" allow="autoplay; encrypted-media" autoplay allowfullscreen></iframe> -->
+    </div>
+  </div>
+
+  <!-- Video 4 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Poses</h3>
+    <div style="position: relative; width: 100%; padding-left: 0%;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/pose_stage2.mp4">
+      </video>
+    </div>
+    
+  </div>
+
+  <!-- Video 5 -->
+    <div style="background-color: whitesmoke; padding: 15px;">
+      <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Partial Point Cloud</h3>
+      <div style="position: relative; width: 100%; padding-left: 0%;">
+        <video id="vid1" controls autoplay muted loop width="100%">
+          <source src="./static/videos/partial_pc.mp4">
+        </video>
+      </div>
+      
+    </div>
+
+  <!-- Video 6 -->
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Completed Point Cloud</h3>
+    <div style="position: relative; width: 100%; padding-left: 0%;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/full_pc.mp4">
+      </video>
+    </div>
+  </div>
+
+
+  <!-- <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Tok k Grasp Poses</h3>
+    <div style="position: relative; width: 100%; padding-left: 0%;">
+      <video id="vid1" controls autoplay muted loop width="100%">
+        <source src="./static/videos/grasp.mp4">
+      </video>
+    </div>
+  </div> -->
+  
+</div>
+
+<div class="columns is-centered has-text-centered">
+  
+  <div style="background-color: whitesmoke; padding: 15px;">
+    <h3 style="border-bottom: 1px solid; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Tok k Grasp Poses</h3>
+    <video id="vid1" controls autoplay muted loop width="80%">
+        <source src="./static/videos/grasp.mp4">
+      </video>
+  </div>
+</div>
+
+
+<!-- 
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <!-- <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> -->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This webpage template was inspired from <a
+              href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
